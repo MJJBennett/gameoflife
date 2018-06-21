@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.1)
 # Create a project. Find and replace ConwayLife to give the project your own title.
 project(ConwayLife)
 
-# Set the version of C++ being used. Here, C++11.
+# Set the version of C++ being used. Here, C++17.
 set (CMAKE_CXX_STANDARD 17)
 
 # CMAKE_SOURCE_DIR refers to the directory with the top-level CMakeLists.txt
@@ -18,6 +18,10 @@ link_directories("${CMAKE_SOURCE_DIR}/lib/SFML-2.4.2/lib")
 
 # Create the executable. Make sure to list every source file (I generally add the headers as well)
 add_executable(ConwayLife
+    src/funcs.cpp include/funcs.h
+    src/debug.cpp include/debug.h
+    src/Resource.cpp include/Resource.h
+    src/game.cpp include/game.h
     src/main.cpp
 )
 
