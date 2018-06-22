@@ -32,11 +32,14 @@ add_executable(ConwayLife
 # This links the executable on Windows and Mac - it shouldn't be too difficult to add Linux as well.
 # If you've branched out into different parts of SFML, you might need different libraries; they can be added here.
 if (APPLE)
+  message("Linking on macOS.")
   target_link_libraries(ConwayLife libsfml-graphics.2.4.dylib libsfml-window.2.4.dylib libsfml-system.2.4.dylib)
 endif (APPLE)
 if (WIN32)
+  message("Linking on Windows.")
   target_link_libraries(ConwayLife libsfml-graphics-d.a libsfml-window-d.a libsfml-system-d.a)
 endif (WIN32)
 if (UNIX AND NOT APPLE)
+  message("Linking on Linux.")
   target_link_libraries(ConwayLife sfml-graphics sfml-window sfml-system)
 endif ()
