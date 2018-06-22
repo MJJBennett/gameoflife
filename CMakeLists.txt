@@ -5,6 +5,9 @@ cmake_minimum_required(VERSION 3.1)
 # Create a project. Find and replace ConwayLife to give the project your own title.
 project(ConwayLife)
 
+add_definitions(-g)
+set(_NO_LINK FALSE)
+
 # Set the version of C++ being used. Here, C++17.
 if(UNIX AND NOT APPLE)
 SET(CMAKE_CXX_COMPILER /usr/bin/g++-7)
@@ -39,7 +42,7 @@ if (WIN32)
   message("Linking on Windows.")
   target_link_libraries(ConwayLife libsfml-graphics-d.a libsfml-window-d.a libsfml-system-d.a)
 endif (WIN32)
-if (UNIX AND NOT APPLE)
+if (UNIX AND NOT APPLE AND NOT _NO_LINK)
   message("Linking on Linux.")
   target_link_libraries(ConwayLife sfml-graphics sfml-window sfml-system)
 endif ()

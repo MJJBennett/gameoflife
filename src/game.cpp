@@ -1,7 +1,7 @@
 #include "game.h"
 
 void game::init() {
-    debug d;
+    write = debug::get_debugger("game.cpp");
     is_init = true;
 }
 
@@ -9,8 +9,10 @@ void game::run() {
     if (!is_init) init();
 
     //Create a window
+    write("Creating window.");
     sf::RenderWindow w(sf::VideoMode(800, 600), "Example Window");
-    
+    write("Window creation complete.");
+
     //Main loop
     while (w.isOpen()) {
 
@@ -27,7 +29,7 @@ void game::run() {
 
         //Do logical updates here
 
-        w.clear(sf::Color::Black);
+        w.clear(sf::Color(0,0,0));
         
         //Draw here with w.draw(//drawable)
         

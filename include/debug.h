@@ -6,9 +6,9 @@
 
 class debug {
 public:
-    std::function<void(std::string)> get_debugger(std::string);
+    static std::function<void(std::string)> get_debugger(std::string);
 private:
-    void _write_debug(std::string, std::string);
+    static void _write_debug(std::string, std::string);
 };
 
 #endif //DEBUG_H

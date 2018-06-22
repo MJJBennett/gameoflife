@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include "debug.h"
 
 class game {
@@ -12,6 +13,7 @@ public:
 private:
     std::vector<std::vector<bool>> state;
     bool is_init;
+    std::function<void(std::string)> write;
 };
 
 #endif //GAME_H
