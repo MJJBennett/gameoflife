@@ -14,5 +14,5 @@ resource * ResourceManager::get_resource(std::string lookup) {
 resource * ResourceManager::load_resource(std::string path) {
     //All paths are relative to RESOURCE_LOCATION
     //Deduce resource type
-    auto ext = reverse_split(path, .);
+    auto ext = split_reverse(path, '.');
 }

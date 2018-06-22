@@ -6,7 +6,10 @@ cmake_minimum_required(VERSION 3.1)
 project(ConwayLife)
 
 # Set the version of C++ being used. Here, C++17.
-set (CMAKE_CXX_STANDARD 17)
+if(UNIX AND NOT APPLE)
+SET(CMAKE_CXX_COMPILER /usr/bin/g++-7)
+endif()
+set(CMAKE_CXX_STANDARD 17)
 
 # CMAKE_SOURCE_DIR refers to the directory with the top-level CMakeLists.txt
 # Here, we're including include/ and lib/SFML-2.4.2/include
@@ -33,3 +36,6 @@ endif (APPLE)
 if (WIN32)
   target_link_libraries(ConwayLife libsfml-graphics-d.a libsfml-window-d.a libsfml-system-d.a)
 endif (WIN32)
+if (UNIX AND NOT APPLE)
+  target_link_libraries(ConwayLife sfml-graphicsd sfml-window sfml-system)
+endif ()
