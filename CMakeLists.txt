@@ -15,6 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Here, we're including include/ and lib/SFML-2.4.2/include
 include_directories("${CMAKE_SOURCE_DIR}/include")
 include_directories("${CMAKE_SOURCE_DIR}/lib/SFML-2.4.2/include")
+link_directories("/usr/lib/x86_64-linux-gnu/")
 
 # Sets the directory where the linker will search for libraries. Necessary to find the .a (or .dylib, etc) files for SFML.
 link_directories("${CMAKE_SOURCE_DIR}/lib/SFML-2.4.2/lib")
@@ -37,5 +38,5 @@ if (WIN32)
   target_link_libraries(ConwayLife libsfml-graphics-d.a libsfml-window-d.a libsfml-system-d.a)
 endif (WIN32)
 if (UNIX AND NOT APPLE)
-  target_link_libraries(ConwayLife sfml-graphicsd sfml-window sfml-system)
+  target_link_libraries(ConwayLife sfml-graphics sfml-window sfml-system)
 endif ()
