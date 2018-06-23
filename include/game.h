@@ -2,7 +2,6 @@
 #define GAME_H
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Color.hpp>
 #include "debug.h"
 
 class game {

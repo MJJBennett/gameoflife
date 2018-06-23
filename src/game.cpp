@@ -20,6 +20,12 @@ void game::run() {
         sf::Event e;
         while (w.pollEvent(e)) {
             switch(e.type) {
+                case sf::Event::KeyPressed:
+                                         switch(e.key.code) {
+                                             case sf::Keyboard::Escape:
+                                                w.close();
+                                                continue;
+                                         }
                 case sf::Event::Resized: w.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
                                          continue;
                 case sf::Event::Closed:  w.close();
@@ -29,7 +35,7 @@ void game::run() {
 
         //Do logical updates here
 
-        w.clear(sf::Color(0,0,0));
+        w.clear(sf::Color::Red);
         
         //Draw here with w.draw(//drawable)
         
