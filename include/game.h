@@ -1,8 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "debug.h"
+#include "Resource.h"
+#include "tile.h"
 
 class game {
 public:

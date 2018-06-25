@@ -8,6 +8,9 @@ void game::init() {
 void game::run() {
     if (!is_init) init();
 
+    //Create resource manager
+    auto r = std::make_unique<ResourceManager>();
+
     //Create a window
     write("Creating window.");
     sf::RenderWindow w(sf::VideoMode(800, 600), "Example Window");
