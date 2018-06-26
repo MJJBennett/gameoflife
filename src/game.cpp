@@ -43,6 +43,7 @@ void game::run() {
                                                 continue;
                                              case sf::Keyboard::Key::A:
                                                 draw_rects++;
+                                                write("Draw now " + std::to_string(draw_rects));
                                                 continue;
                                          }
                 case sf::Event::Resized: w.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
@@ -54,7 +55,7 @@ void game::run() {
 
         //Do logical updates here
 
-        w.clear(sf::Color::White);
+        w.clear(sf::Color::Black);
         
         //Draw here with w.draw(//drawable)
         for (int i = 0; i < draw_rects; i++) {
@@ -62,6 +63,9 @@ void game::run() {
             w.draw(rect);
         }
         
+        rect.setPosition(0, 0);
+        w.draw(rect);
+
         w.display();
 
     }
