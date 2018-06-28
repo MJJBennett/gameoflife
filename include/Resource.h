@@ -15,7 +15,7 @@ class ResourceManager {
 public:
     ResourceManager() { write = debug::get_debugger("game.cpp"); }
     resource * retrieve_resource(const std::string&);
-    void preload_resource(std::string);
+    resource * preload_resource(std::string, bool exclusive = false);
 private:
     std::function<void(std::string)> write;
     struct ResourceWrapper {
@@ -27,7 +27,7 @@ private:
 
     std::vector<ResourceWrapper> resources;
 
-    resource * load_resource(std::string);
+    resource * load_resource(std::string, bool exclusive = false);
 };
 
 #endif //CONWAY_RES_H
