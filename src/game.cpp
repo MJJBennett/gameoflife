@@ -30,6 +30,7 @@ void game::run() {
 */
 
     //Main loop
+    int _tick = 0;
     write("Entering main loop.");
     while (w.isOpen()) {
 
@@ -45,9 +46,13 @@ void game::run() {
                                              case sf::Keyboard::Key::P:
                                                  world.set_square_size(world.get_square_size() + 1);
                                                  continue;
+                                             case sf::Keyboard::Key::A:
+                                                 world.update();
+                                                 continue;
                                              case sf::Keyboard::Key::D:
                                                  //Debug option
                                                  write("Printing debug information into stdout.");
+                                                 world.dump_debug();
                                                  continue;
                                              default:
                                                  continue;
@@ -63,20 +68,16 @@ void game::run() {
 
         //Do logical updates here
 
-
         //Clears the window for drawing
-        w.clear(sf::Color::Black);
+        w.clear(sf::Color::Blue);
 
-        //For each boolean value, draw or not based off of its toggle
-        our_rect.setFillColor(sf::Color::Red);
-        for (int x = 0; x < world_width; x++) {
-            for (int y = 0; y < world_height; y++) {
-                if (world_state[coord(x, y)]) draw_rect(x, y);
-            }
+        for (auto && sqr : world) {
+            w.draw(sqr);
         }
 
         w.display();
-        //while(true);
+        _tick++;
+        //if (!(_tick % 60)) std::cout << _tick << '\n';
     }
     //Ensure the window is closed
     w.close();

@@ -38,23 +38,32 @@ public:
 
     int get_square_size();
 
+    bool update();
+
+    void dump_debug();
+
     //We're going to make this iterable
     //Note: This would (normally) be an incredibly bad idea
     //However, as this is mostly just a pet project for fun, we're doing this anyways
     WorldIter begin() { return WorldIter(this, 0); }
     WorldIter end() { return WorldIter(this, (int)state.size()); }
 
+    //testing only
+    //const sf::RectangleShape& _get_rect(int, int) const;
 private:
+    bool side(int x, int y, int s);
     void resolve_square(int x, int y); //TODO
     std::function<void(std::string)> write;
     int coord(int x, int y) const;
     int world_width = 100;
     int world_height = 100;
-    std::vector<bool> state;
+    std::vector<unsigned char> state;
     int square_size = 5;
-    void get_rect(int, int);
-    sf::RectangleShape our_rect;
+    const sf::RectangleShape& get_rect(int, int) const;
+    const sf::RectangleShape& get_rect(int) const;
+    mutable sf::RectangleShape our_rect;
     ResourceManager * res = nullptr;
+    sf::Color bg_color = sf::Color::Black;
 };
 
 
