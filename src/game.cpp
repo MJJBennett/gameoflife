@@ -15,7 +15,7 @@ void game::run() {
 
     //Create a window
     write("Creating window.");
-    w.create(sf::VideoMode(800, 600), "Example Window");
+    w.create(sf::VideoMode(500, 500), "Example Window");
     write("Window creation complete.");
 
     World world;
@@ -53,6 +53,10 @@ void game::run() {
                                                  //Debug option
                                                  write("Printing debug information into stdout.");
                                                  world.dump_debug();
+                                                 continue;
+                                             case sf::Keyboard::Key::R:
+                                                 write("Resetting world.");
+                                                 world.reset();
                                                  continue;
                                              default:
                                                  continue;

@@ -1,10 +1,21 @@
-### Conway's Game of Life Implementation with SFML
+### An Implementation of Conway's Game of Life with SFML 
 
-A very simple, brief implementation of Conway's game of life.
+This is a simple implementation of [Conway's Game of Life](gp.forricide.me/conway) - a cell simulation, where cells (or tiles, squares, etc) 'reproduce' based on their current conditions and a set of rules.
 
-#### Rules
-
+##### Rules
 - Any live cell with fewer than two live neighbors dies, as if by under population.
 - Any live cell with two or three live neighbors lives on to the next generation.
 - Any live cell with more than three live neighbors dies, as if by overpopulation.
 - Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+
+#####Installation
+
+This application was designed and written with some new features of C++17 in mind. Consequently, building it will require a recent C++ compiler.
+
+In order to build the application, `git clone` or download this repository, as well as binaries for [SFML](https://sfml-dev.org/download). Place the folder containing SFML into ./lib/ and ensure the folder's name starts with "SFML". Then run `cd build/` and then `cmake ..` and `make`. The application, when successfully built, can be run with `./ConwayLife` (Unix) or `ConwayLife.exe` (Windows). 
+
+#####Instructions
+
+Currently, the starting setup of the simulation can only be configured by directly setting it in World.cpp (under the function `load()`). This will be changed to allow for live changes as well as configuration files.
+
+The simulation can be advanced by pressing `a` and reset with `r`. 

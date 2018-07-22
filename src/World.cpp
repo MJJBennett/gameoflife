@@ -1,18 +1,14 @@
 #include "World.h"
-#include <cmath>
+#include <cmath> //For floor()
+#include <iostream> //For debug
 
 const sf::RectangleShape& WorldIter::operator*() {
-//    for (int x = 0; x < world_width; x++) {
-//        for (int y = 0; y < world_height; y++) {
-//            if (world_state[coord(x, y)]) draw_rect(x, y);
-//        }
-//    }
     return _world->get_rect(_pos);
 }
 
 int World::coord(int x, int y) const {
     if (x > world_width || x < 0 || y > world_height || y < 0) {
-        write("[ERROR] X and Y entered out of bounds!");
+        debug::err(write, "X and Y entered out of bounds!");
         return -1;
     }
     int _coord = (world_width * y) + x;
@@ -25,23 +21,14 @@ void World::init(ResourceManager * r) {
     res = r;
 
     state.resize((size_t)(world_height * world_width));
-    std::fill(state.begin(), state.end(), 0);
 
     auto rect_p = r->retrieve_resource("RECT_GAMECPP");
-    if (!rect_p) write("Rect could not be created!");
+    if (!rect_p) debug::err(write, "Rect could not be created!");
     our_rect = std::get<sf::RectangleShape>(*(r->retrieve_resource("RECT_GAMECPP")));
     our_rect.setFillColor(sf::Color::Red);
     our_rect.setSize({(float)square_size, (float)square_size});
 
-    //Test code that is meant to set up a 'square' of tiles
-    for (int x = 0; x < world_width; x++) state[coord(x, 0)] = 1;
-    for (int x = 0; x < world_width; x++) state[coord(x, world_height-1)] = 1;
-    for (int y = 0; y < world_height; y++) state[coord(0, y)] = 1;
-    for (int y = 0; y < world_height; y++) state[coord(world_width - 1, y)] = 1;
-    state[0] = 1;
-    state[1] = 1;
-    state[coord(0, 1)] = 1;
-    state[coord(1, 1)] = 1;
+    reset();
 }
 
 void World::set_square_size(float s) {
@@ -161,4 +148,24 @@ void World::dump_debug() {
         }
         std::cout << std::endl;
     }
+}
+
+void World::reset() {
+    std::fill(state.begin(), state.end(), 0);
+    load();
+}
+
+void World::load() {
+    //Test code that is meant to set up a 'square' of tiles
+    for (int x = 0; x < world_width; x++) state[coord(x, 0)] = 1;
+    for (int x = 0; x < world_width; x++) state[coord(x, world_height-1)] = 1;
+    for (int y = 0; y < world_height; y++) state[coord(0, y)] = 1;
+    for (int y = 0; y < world_height; y++) state[coord(world_width - 1, y)] = 1;
+    state[0] = 1;
+    state[1] = 1;
+    state[coord(0, 1)] = 1;
+    state[coord(1, 1)] = 1;
+//    state[coord(5, 5)] = 1;
+//    state[coord(5, 6)] = 1;
+//    state[coord(5, 7)] = 1;
 }

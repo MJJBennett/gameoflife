@@ -48,12 +48,12 @@ public:
     WorldIter begin() { return WorldIter(this, 0); }
     WorldIter end() { return WorldIter(this, (int)state.size()); }
 
-    //testing only
-    //const sf::RectangleShape& _get_rect(int, int) const;
+    void reset();
+
 private:
     bool side(int x, int y, int s);
     void resolve_square(int x, int y); //TODO
-    std::function<void(std::string)> write;
+    logger write;
     int coord(int x, int y) const;
     int world_width = 100;
     int world_height = 100;
@@ -64,6 +64,8 @@ private:
     mutable sf::RectangleShape our_rect;
     ResourceManager * res = nullptr;
     sf::Color bg_color = sf::Color::Black;
+
+    void load();
 };
 
 

@@ -2,6 +2,10 @@
 *.pdf
 *.jpeg
 *.ignore
-.vscode/
-swap.sh
 *.out
+
+.vscode/
+.vs/
+.idea/
+
+clion-build/

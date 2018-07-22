@@ -2,12 +2,14 @@
 #define DEBUG_H
 
 #include <functional>
-#include <iostream>
+
+using logger = std::function<void(std::string)>;
 
 class debug {
 public:
+    static logger get_debugger(std::string);
     static void write_break(int);
-    static std::function<void(std::string)> get_debugger(std::string);
+    static void err(const logger &writer, std::string);
 private:
     static void _write_debug(std::string, std::string);
 };
