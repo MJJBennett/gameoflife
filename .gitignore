@@ -4,6 +4,8 @@
 *.ignore
 *.out
 
+CMakeSettings.json
+
 .vscode/
 .vs/
 .idea/
