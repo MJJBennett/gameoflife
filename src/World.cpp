@@ -157,28 +157,28 @@ void World::reset() {
 
 void World::load() {
     //Test code that is meant to set up a 'square' of tiles
-//    for (int x = 0; x < world_width; x++) state[coord(x, 0)] = 1;
-//    for (int x = 0; x < world_width; x++) state[coord(x, world_height-1)] = 1;
-//    for (int y = 0; y < world_height; y++) state[coord(0, y)] = 1;
-//    for (int y = 0; y < world_height; y++) state[coord(world_width - 1, y)] = 1;
-//    state[0] = 1;
-//    state[1] = 1;
-//    state[coord(0, 1)] = 1;
-//    state[coord(1, 1)] = 1;
+    for (int x = 0; x < world_width; x++) state[coord(x, 0)] = 1;
+    for (int x = 0; x < world_width; x++) state[coord(x, world_height-1)] = 1;
+    for (int y = 0; y < world_height; y++) state[coord(0, y)] = 1;
+    for (int y = 0; y < world_height; y++) state[coord(world_width - 1, y)] = 1;
+    state[0] = 1;
+    state[1] = 1;
+    state[coord(0, 1)] = 1;
+    state[coord(1, 1)] = 1;
 
-    state[coord(4, 10)] = 1;
-    state[coord(4, 11)] = 1;
-    state[coord(4, 13)] = 1;
-    state[coord(4, 14)] = 1;
-
-    state[coord(5, 10)] = 1;
-    state[coord(5, 14)] = 1;
-
-    state[coord(6, 11)] = 1;
-    state[coord(6, 12)] = 1;
-    state[coord(6, 13)] = 1;
-
-    state[coord(7, 12)] = 1;
+//    state[coord(4, 10)] = 1;
+//    state[coord(4, 11)] = 1;
+//    state[coord(4, 13)] = 1;
+//    state[coord(4, 14)] = 1;
+//
+//    state[coord(5, 10)] = 1;
+//    state[coord(5, 14)] = 1;
+//
+//    state[coord(6, 11)] = 1;
+//    state[coord(6, 12)] = 1;
+//    state[coord(6, 13)] = 1;
+//
+//    state[coord(7, 12)] = 1;
 
 //    state[coord(5, 5)] = 1;
 //    state[coord(5, 6)] = 1;
