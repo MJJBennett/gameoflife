@@ -18,4 +18,4 @@ In order to build the application, `git clone` or download this repository, as w
 
 Currently, the starting setup of the simulation can only be configured by directly setting it in World.cpp (under the function `load()`). This will be changed to allow for live changes as well as configuration files.
 
-The simulation can be advanced by pressing `a` and reset with `r`. 
+The simulation can be advanced by pressing `a` or the return key, and reset with `r`. Furthermore, the simulation can be advanced any `n` times by entering a number (say, `342`) with number keys and then pressing `a` or the return key.
