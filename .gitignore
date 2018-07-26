@@ -3,6 +3,7 @@
 *.jpeg
 *.ignore
 *.out
+*.gif
 
 CMakeSettings.json
 

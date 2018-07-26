@@ -1,4 +1,5 @@
 #include "Resource.h"
+#include <utility>
 
 const std::string ResourceManager::RESOURCE_LOCATION = "../resources/";
 
@@ -10,7 +11,7 @@ resource * ResourceManager::retrieve_resource(const std::string& ID) {
 resource * ResourceManager::load_resource(std::string path, bool exclusive) {
     //All paths are relative to RESOURCE_LOCATION
 
-    if (path == "") return nullptr;
+    if (path.empty()) return nullptr;
 
     if (path.substr(0, 4)  == "RECT") {
         write("Loading a rect.");
@@ -32,6 +33,6 @@ resource * ResourceManager::load_resource(std::string path, bool exclusive) {
     return nullptr;
 }
 
-resource * ResourceManager::preload_resource(std::string path, bool exclusive) {
-    return load_resource(std::move(path), exclusive);
+resource * ResourceManager::preload_resource(const std::string& path, bool exclusive) {
+    return load_resource(path, exclusive);
 }

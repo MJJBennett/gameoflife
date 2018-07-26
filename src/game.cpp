@@ -15,7 +15,7 @@ void game::run() {
 
     //Create a window
     write("Creating window.");
-    w.create(sf::VideoMode(500, 500), "Example Window");
+    w.create(sf::VideoMode(500, 500), "Game of Life");
     write("Window creation complete.");
 
     world.init(r.get());

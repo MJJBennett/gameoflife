@@ -15,7 +15,7 @@ class ResourceManager {
 public:
     ResourceManager() { write = debug::get_debugger("game.cpp"); }
     resource * retrieve_resource(const std::string&);
-    resource * preload_resource(std::string, bool exclusive = false);
+    resource * preload_resource(const std::string&, bool exclusive = false);
 private:
     std::function<void(std::string)> write;
     struct ResourceWrapper {

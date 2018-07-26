@@ -2,6 +2,8 @@
 
 This is a simple implementation of [Conway's Game of Life](gp.forricide.me/conway) - a cell simulation, where cells (or tiles, squares, etc) 'reproduce' based on their current conditions and a set of rules.
 
+![](https://media.giphy.com/media/2rAKWLKwdtnw3FwgrJ/giphy.gif)
+
 ##### Rules
 - Any live cell with fewer than two live neighbors dies, as if by under population.
 - Any live cell with two or three live neighbors lives on to the next generation.
