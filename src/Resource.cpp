@@ -33,6 +33,6 @@ resource * ResourceManager::load_resource(std::string path, bool exclusive) {
     return nullptr;
 }
 
-resource * ResourceManager::preload_resource(std::string path, bool exclusive) {
+resource * ResourceManager::preload_resource(const std::string& path, bool exclusive) {
     return load_resource(std::move(path), exclusive);
 }
