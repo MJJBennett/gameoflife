@@ -9,7 +9,8 @@ class debug {
 public:
     static logger get_debugger(std::string);
     static void write_break(int);
-    static void err(const logger &writer, std::string);
+    static void err(const logger&, std::string);
+    static void warn(const logger&, std::string);
 private:
     static void _write_debug(std::string, std::string);
 };

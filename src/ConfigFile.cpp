@@ -3,13 +3,9 @@
 #include <algorithm>
 #include <iostream>
 
-ConfigFile::~ConfigFile() {
-
-}
-
 void ConfigFile::parse() {
-    char delim = '=';
-    char comment = '#';
+    configuration.clear();
+    //Open configuration file
     auto f = std::ifstream(_filename);
     if (!f.good()) {
         debug::err(write, "Could not open configuration file for parsing!");
@@ -18,6 +14,8 @@ void ConfigFile::parse() {
     std::string str = "";
     int _line = 0;
     int _skipped = 0;
+    char delim = '=';
+    char comment = '#';
     while (std::getline(f, str)) {
         str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
         _line+=1;
@@ -42,4 +40,8 @@ void ConfigFile::parse() {
 const std::basic_string<char> & ConfigFile::get(std::string var) const {
     if (configuration.find(var) == configuration.end()) return get_filename();
     return configuration.at(var);
+}
+
+const std::basic_string<char> & ConfigFile::at(std::string var) const {
+    return get(std::move(var));
 }

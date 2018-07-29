@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "Resource.h"
 #include <World.h>
+#include "ConfigFile.h"
 
 struct KEY_COMBO {
     //Used to store information on key combos
@@ -27,9 +28,12 @@ struct KEY_COMBO {
 
 class game {
 public:
+    game() = default;
+    explicit game(ConfigFile&& config) : config(config) {}
     void init();
     void run();
 private:
+    ConfigFile config;
     sf::RenderWindow w;
     bool is_init = false;
     logger write;
