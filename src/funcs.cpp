@@ -1,11 +1,13 @@
 #include <algorithm>
+#include <funcs.h>
+
 #include "funcs.h"
 
 std::string split_reverse(std::string str, char delim) {
     for (auto r_it = str.rbegin(); r_it != str.rend(); r_it++) {
         if (*r_it == delim) return std::string(r_it.base(), str.end());
     }
-    return str;
+    return str; //Do not std::move this; it should be elided
 }
 
 /* So far as I can tell, these two string split implementations are essentially identical in runtime.
@@ -27,4 +29,9 @@ std::string _split_impl_2(std::string str, char delim) {
 
 std::string split(std::string str, char delim) {
     return _split_impl_2(std::move(str), delim);
+}
+
+void str_strip(std::string &str, char delim) {
+    str.erase(str.begin(), std::find_if(str.begin(), str.end(), [delim](int c) {return c != delim;}));
+    str.erase(std::find_if(str.rbegin(), str.rend(), [delim](int c) {return c != delim;}).base(), str.end());
 }

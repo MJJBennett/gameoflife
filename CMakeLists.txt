@@ -22,11 +22,12 @@ endif ()
 add_executable(ConwayLife
     ${CMAKE_SOURCE_DIR}/src/funcs.cpp ${CMAKE_SOURCE_DIR}/include/funcs.h
     ${CMAKE_SOURCE_DIR}/src/debug.cpp ${CMAKE_SOURCE_DIR}/include/debug.h
+    ${CMAKE_SOURCE_DIR}/src/ConfigFile.cpp ${CMAKE_SOURCE_DIR}/include/ConfigFile.h
     ${CMAKE_SOURCE_DIR}/src/Resource.cpp ${CMAKE_SOURCE_DIR}/include/Resource.h
     ${CMAKE_SOURCE_DIR}/src/World.cpp ${CMAKE_SOURCE_DIR}/include/World.h
     ${CMAKE_SOURCE_DIR}/src/game.cpp ${CMAKE_SOURCE_DIR}/include/game.h
     ${CMAKE_SOURCE_DIR}/src/main.cpp
-)
+        tests/config_testing.h)
 
 if (NOT LINUX)
     link_directories("${CMAKE_SOURCE_DIR}/lib/SFML-2.4.2/lib")

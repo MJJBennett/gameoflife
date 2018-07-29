@@ -1,0 +1,11 @@
+# This is an example configuration file
+# Below is an empty variable
+var1=
+# Below is an unnamed variable
+=val2
+# Below is a normal test
+var3=val3
+# Below is an inline comment
+var4=val4# Or does it?
+# Now we test spaces
+   var5  = val5   # A nice test
