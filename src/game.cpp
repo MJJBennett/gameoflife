@@ -21,15 +21,27 @@ void game::run() {
 
     world.init(r.get());
 
-    //Main loop
-    int _tick = 0;
-    write("Entering main loop.");
-    long long do_update = 0;
+    //Ideally this would all be done through the resource manager.
+    //This is on the todo list.
     sf::Text key_state;
-    key_state.setPosition(5, 5);
     sf::Font font;
+    font.loadFromFile("../resources/fonts/RobotoMono/Regular.ttf");
+    key_state.setCharacterSize(14);
     key_state.setFont(font);
+    key_state.setPosition(5, w.getSize().y - 24);
 
+    sf::Text update_state;
+    update_state.setCharacterSize(14);
+    update_state.setFont(font);
+    update_state.setPosition(w.getSize().x - (update_state.getLocalBounds().width + 5), w.getSize().y - 24);
+
+    //Get some configuration information (to avoid having to cast strings to ints more than once)
+    bool show_numbers = (config.get_or_add_default("show numbers", "true") == "true");
+
+    //Main loop
+    write("Entering main loop.");
+    int _tick = 0;
+    long long do_update = 0;
     while (w.isOpen()) {
 
         //Basic event loop
@@ -37,47 +49,49 @@ void game::run() {
         while (w.pollEvent(e)) {
             switch(e.type) {
                 case sf::Event::KeyPressed:
-                                         switch(e.key.code) {
-                                             case sf::Keyboard::Escape:
-                                                 w.close();
-                                                 continue;
-                                             case sf::Keyboard::Key::P:
-                                                 world.set_square_size(world.get_square_size() + 1);
-                                                 continue;
-                                             case sf::Keyboard::Key::Right:
-                                             case sf::Keyboard::Key::Return:
-                                             case sf::Keyboard::Key::A:
-                                                 if (key_combo.active) {
-                                                     do_update += key_combo.get_num();
-                                                     key_combo.reset();
-                                                 }
-                                                 else do_update++;
-                                                 write("Updates left to handle: " + std::to_string(do_update));
-                                                 if (do_update < 0) debug::err(write, "Less than 0 updates found!");
-                                                 continue;
-                                             case sf::Keyboard::Key::Up:
-                                             case sf::Keyboard::Key::D:
-                                                 //Debug option
-                                                 write("Printing debug information into stdout.");
-                                                 write("\tUpdates left to handle: " + std::to_string(do_update));
-                                                 write("\tNumber of ticks since start: " + std::to_string(_tick));
-                                                 world.dump_debug();
-                                                 continue;
-                                             case sf::Keyboard::Key::Down:
-                                             case sf::Keyboard::Key::R:
-                                                 write("Resetting world.");
-                                                 world.reset();
-                                                 key_combo.reset();
-                                                 do_update = 0;
-                                                 continue;
-                                             default:
-                                                 handle_keyboard(e.key.code);
-                                                 continue;
-                                         }
-                case sf::Event::Resized: w.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
-                                         continue;
-                case sf::Event::Closed:  w.close();
-                                         continue;
+                     switch(e.key.code) {
+                         case sf::Keyboard::Escape:
+                             w.close();
+                             continue;
+                         case sf::Keyboard::Key::P:
+                             world.set_square_size(world.get_square_size() + 1);
+                             continue;
+                         case sf::Keyboard::Key::Right:
+                         case sf::Keyboard::Key::Return:
+                         case sf::Keyboard::Key::A:
+                             if (key_combo.active) {
+                                 do_update += key_combo.get_num();
+                                 key_combo.reset();
+                             }
+                             else do_update++;
+                             write("Updates left to handle: " + std::to_string(do_update));
+                             if (do_update < 0) debug::err(write, "Less than 0 updates found!");
+                             continue;
+                         case sf::Keyboard::Key::Up:
+                         case sf::Keyboard::Key::D:
+                             //Debug option
+                             write("Printing debug information into stdout.");
+                             write("\tUpdates left to handle: " + std::to_string(do_update));
+                             write("\tNumber of ticks since start: " + std::to_string(_tick));
+                             world.dump_debug();
+                             continue;
+                         case sf::Keyboard::Key::Down:
+                         case sf::Keyboard::Key::R:
+                             write("Resetting world.");
+                             world.reset();
+                             key_combo.reset();
+                             do_update = 0;
+                             continue;
+                         default:
+                             handle_keyboard(e.key.code);
+                             continue;
+                     }
+                case sf::Event::Resized:
+                    w.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
+                    continue;
+                case sf::Event::Closed:
+                    w.close();
+                    continue;
                 default:
                     continue;
             }
@@ -98,13 +112,16 @@ void game::run() {
 
         if (key_combo.active) {
             key_state.setString(key_combo.str_state);
-//            write(key_combo.str_state);
             w.draw(key_state);
+        }
+        if (do_update > 0 && show_numbers) {
+            update_state.setString(std::to_string(do_update));
+            update_state.setPosition(w.getSize().x - update_state.getLocalBounds().width - 5, w.getSize().y - 24);
+            w.draw(update_state);
         }
 
         w.display();
         _tick++;
-        //if (!(_tick % 60)) std::cout << _tick << '\n';
     }
     //Ensure the window is closed
     w.close();
