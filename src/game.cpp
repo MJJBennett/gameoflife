@@ -1,3 +1,4 @@
+#include <chrono>
 #include "game.h"
 
 void game::init() {
@@ -35,21 +36,38 @@ void game::run() {
     update_state.setFont(font);
     update_state.setPosition(w.getSize().x - (update_state.getLocalBounds().width + 5), w.getSize().y - 24);
 
+    sf::Text fps_state;
+    fps_state.setCharacterSize(14);
+    fps_state.setFont(font);
+    fps_state.setPosition(w.getSize().x - fps_state.getLocalBounds().width - 5, 5);
+
     //Get some configuration information (to avoid having to cast strings to ints more than once)
     bool show_numbers = (config.get_or_add_default("show numbers", "true") == "true");
+    bool show_fps = (config.get_or_add_default("show fps", "false") == "true");
+
+    unsigned int text_update_rate = (unsigned int)std::stoi(config.get_or_add_default("Text Update Rate", "1"));
+    unsigned int fps_update_rate = (unsigned int)std::stoi(config.get_or_add_default("FPS Update Rate", "10"));
+    unsigned int fps_limit = (unsigned int)std::stoi(config.get_or_add_default("framerate limit", "0"));
+    if (fps_limit >= 0) w.setFramerateLimit(fps_limit);
+
+    auto now = std::chrono::system_clock::now();
+    auto previous_frame = now;
+    using second = std::chrono::duration<float>;
 
     //Main loop
     write("Entering main loop.");
     int _tick = 0;
     long long do_update = 0;
+    int fps = 0;
     while (w.isOpen()) {
-
+        now = std::chrono::system_clock::now();
         //Basic event loop
         sf::Event e{};
         while (w.pollEvent(e)) {
             switch(e.type) {
                 case sf::Event::KeyPressed:
                      switch(e.key.code) {
+                         case sf::Keyboard::Key::Left:
                          case sf::Keyboard::Escape:
                              w.close();
                              continue;
@@ -73,7 +91,9 @@ void game::run() {
                              write("Printing debug information into stdout.");
                              write("\tUpdates left to handle: " + std::to_string(do_update));
                              write("\tNumber of ticks since start: " + std::to_string(_tick));
-                             world.dump_debug();
+                             fps = (int) (1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / fps_update_rate));
+                             write("\tCurrent FPS: " + std::to_string(1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / (_tick % fps_update_rate + 1))));
+                             //world.dump_debug();
                              continue;
                          case sf::Keyboard::Key::Down:
                          case sf::Keyboard::Key::R:
@@ -111,16 +131,30 @@ void game::run() {
         }
 
         if (key_combo.active) {
-            key_state.setString(key_combo.str_state);
+            if (_tick % text_update_rate == 0) {
+                key_state.setString(key_combo.str_state);
+            }
             w.draw(key_state);
         }
         if (do_update > 0 && show_numbers) {
-            update_state.setString(std::to_string(do_update));
-            update_state.setPosition(w.getSize().x - update_state.getLocalBounds().width - 5, w.getSize().y - 24);
+            if (_tick % text_update_rate == 0) {
+                update_state.setString(std::to_string(do_update));
+                update_state.setPosition(w.getSize().x - update_state.getLocalBounds().width - 5, w.getSize().y - 24);
+            }
             w.draw(update_state);
         }
-
+        if (show_fps) {
+            if (_tick % fps_update_rate == 0) {
+                //calculate frames per second
+                fps = (int) (1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / fps_update_rate));
+                fps_state.setString(std::to_string(fps));
+                fps_state.setPosition(w.getSize().x - fps_state.getLocalBounds().width - 5, 5);
+                previous_frame = now;
+            }
+            w.draw(fps_state);
+        }
         w.display();
+        if (_tick % fps_update_rate == 0) previous_frame = now;
         _tick++;
     }
     //Ensure the window is closed
