@@ -10,23 +10,16 @@ void game::run() {
 
     //Create resource manager
     auto r = std::make_unique<ResourceManager>();
-    r->preload_resource("images/red.png");
     r->preload_resource("RECT_GAMECPP"); //I really don't like this, would definitely do it differently
 
     //Create a window
     write("Creating window.");
-    w.create(sf::VideoMode(500, 500), "Game of Life");
+    w.create(sf::VideoMode(static_cast<unsigned int>(std::stoi(config.get_or_add_default("width", "500"))),
+                           static_cast<unsigned int>(std::stoi(config.get_or_add_default("height", "500")))),
+                           config.get_or_add_default("game title", "Game of Life"));
     write("Window creation complete.");
 
     world.init(r.get());
-
-/*
-    int draw_rects = 0;
-    auto rect_p = r->retrieve_resource("images/red.png");
-    if (rect_p == nullptr) write("Recieved a null resource!");
-    sf::Sprite rect;
-    rect.setTexture(std::get<sf::Texture>(*rect_p));
-*/
 
     //Main loop
     int _tick = 0;
@@ -51,6 +44,7 @@ void game::run() {
                                              case sf::Keyboard::Key::P:
                                                  world.set_square_size(world.get_square_size() + 1);
                                                  continue;
+                                             case sf::Keyboard::Key::Right:
                                              case sf::Keyboard::Key::Return:
                                              case sf::Keyboard::Key::A:
                                                  if (key_combo.active) {
@@ -61,6 +55,7 @@ void game::run() {
                                                  write("Updates left to handle: " + std::to_string(do_update));
                                                  if (do_update < 0) debug::err(write, "Less than 0 updates found!");
                                                  continue;
+                                             case sf::Keyboard::Key::Up:
                                              case sf::Keyboard::Key::D:
                                                  //Debug option
                                                  write("Printing debug information into stdout.");
@@ -68,6 +63,7 @@ void game::run() {
                                                  write("\tNumber of ticks since start: " + std::to_string(_tick));
                                                  world.dump_debug();
                                                  continue;
+                                             case sf::Keyboard::Key::Down:
                                              case sf::Keyboard::Key::R:
                                                  write("Resetting world.");
                                                  world.reset();

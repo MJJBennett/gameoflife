@@ -2,6 +2,8 @@
 #include <iostream>
 #define DO_DEBUG true
 
+//To get a logger, call
+//logger x = debug::get_debugger("source name")
 std::function<void(std::string)> debug::get_debugger(std::string caller) {
 #if DO_DEBUG == true
     return std::bind(&debug::_write_debug, std::placeholders::_1, caller);

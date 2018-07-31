@@ -22,8 +22,6 @@ public:
         if (configuration.empty()) debug::warn(write, "No configuration options were set.");
     }
 
-    //Run parse() to (re)load configuration options from _filename
-    void parse();
     //Set filename if you want to switch to a different file (prior to calling parse())
     void set_filename(std::string&& filename) {_filename = std::move(filename);}
     void set_filename(std::string filename) {_filename = filename;}
@@ -31,7 +29,10 @@ public:
     //Retrieves value for a variable
     const std::basic_string<char> & get(std::string var) const;
     const std::basic_string<char> & at(std::string var) const;
+
+    const std::string & get_or_add_default(std::string var, std::string val);
 private:
+    void parse(); //Only call this on creation of the file - otherwise, there may be undefined reference errors
     logger write;
     std::string _filename;
     std::map<std::string, std::string> configuration;

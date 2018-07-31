@@ -2,6 +2,8 @@
 #include "funcs.h"
 #include <algorithm>
 #include <iostream>
+#include <ConfigFile.h>
+
 
 void ConfigFile::parse() {
     configuration.clear();
@@ -44,4 +46,9 @@ const std::basic_string<char> & ConfigFile::get(std::string var) const {
 
 const std::basic_string<char> & ConfigFile::at(std::string var) const {
     return get(std::move(var));
+}
+
+const std::string &ConfigFile::get_or_add_default(std::string var, std::string default_value) {
+    if (at(var) == get_filename()) configuration[var] = default_value;
+    return at(var);
 }
