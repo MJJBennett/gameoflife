@@ -60,7 +60,6 @@ void game::run() {
     long long do_update = 0;
     int fps = 0;
     while (w.isOpen()) {
-        now = std::chrono::system_clock::now();
         //Basic event loop
         sf::Event e{};
         while (w.pollEvent(e)) {
@@ -91,6 +90,7 @@ void game::run() {
                              write("Printing debug information into stdout.");
                              write("\tUpdates left to handle: " + std::to_string(do_update));
                              write("\tNumber of ticks since start: " + std::to_string(_tick));
+                             now = std::chrono::system_clock::now();
                              fps = (int) (1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / fps_update_rate));
                              write("\tCurrent FPS: " + std::to_string(1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / (_tick % fps_update_rate + 1))));
                              //world.dump_debug();
@@ -134,7 +134,8 @@ void game::run() {
         w.clear(sf::Color::Blue);
 
         for (auto && sqr : world) {
-            w.draw(sqr);
+            if (sqr.getPosition().x < w.getSize().x && sqr.getPosition().y < w.getSize().y)
+                w.draw(sqr);
         }
 
         if (key_combo.active) {
@@ -154,6 +155,7 @@ void game::run() {
         if (show_fps) {
             if (_tick % fps_update_rate == 0) {
                 //calculate frames per second
+                now = std::chrono::system_clock::now();
                 fps = (int) (1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / fps_update_rate));
                 fps_state.setString(std::to_string(fps));
                 fps_state.setPosition(w.getSize().x - fps_state.getLocalBounds().width - 5, 5);
