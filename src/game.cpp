@@ -11,7 +11,7 @@ void game::run() {
 
     //Create resource manager
     auto r = std::make_unique<ResourceManager>();
-    r->preload_resource("RECT_GAMECPP"); //I really don't like this, would definitely do it differently
+    r->preload_resource("RECT_WORLD_CPP"); //I really don't like this, would definitely do it differently
 
     //Create a window
     write("Creating window.");
@@ -20,7 +20,7 @@ void game::run() {
                            config.get_or_add_default("game title", "Game of Life"));
     write("Window creation complete.");
 
-    world.init(r.get());
+    world.init(r.get(), (unsigned int)std::stoi(config.get_or_add_default("canvas width", "100")), (unsigned int)std::stoi(config.get_or_add_default("canvas height", "100")));
 
     //Ideally this would all be done through the resource manager.
     //This is on the todo list.
@@ -45,8 +45,8 @@ void game::run() {
     bool show_numbers = (config.get_or_add_default("show numbers", "true") == "true");
     bool show_fps = (config.get_or_add_default("show fps", "false") == "true");
 
-    unsigned int text_update_rate = (unsigned int)std::stoi(config.get_or_add_default("Text Update Rate", "1"));
-    unsigned int fps_update_rate = (unsigned int)std::stoi(config.get_or_add_default("FPS Update Rate", "10"));
+    unsigned int text_update_rate = (unsigned int)std::stoi(config.get_or_add_default("text update rate", "1"));
+    unsigned int fps_update_rate = (unsigned int)std::stoi(config.get_or_add_default("fps update rate", "10"));
     unsigned int fps_limit = (unsigned int)std::stoi(config.get_or_add_default("framerate limit", "0"));
     if (fps_limit >= 0) w.setFramerateLimit(fps_limit);
 
@@ -106,6 +106,13 @@ void game::run() {
                              handle_keyboard(e.key.code);
                              continue;
                      }
+                case sf::Event::MouseButtonReleased:
+                    if (e.mouseButton.x > 0 && e.mouseButton.x < w.getSize().x
+                        && e.mouseButton.y > 0 && e.mouseButton.y < w.getSize().y) {
+                        //If the mouse button was released while in the window
+                        world.invert(e.mouseButton.x, e.mouseButton.y);
+                    }
+                    continue;
                 case sf::Event::Resized:
                     w.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
                     continue;
@@ -133,6 +140,7 @@ void game::run() {
         if (key_combo.active) {
             if (_tick % text_update_rate == 0) {
                 key_state.setString(key_combo.str_state);
+                key_state.setPosition(5, w.getSize().y - 24);
             }
             w.draw(key_state);
         }

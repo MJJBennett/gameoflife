@@ -1,6 +1,8 @@
 #include "World.h"
 #include <cmath> //For floor()
 #include <iostream> //For debug
+#include <World.h>
+
 
 const sf::RectangleShape& WorldIter::operator*() {
     return _world->get_rect(_pos);
@@ -15,16 +17,19 @@ int World::coord(int x, int y) const {
     return _coord;
 }
 
-void World::init(ResourceManager * r) {
+void World::init(ResourceManager * r, int width, int height) {
     write = debug::get_debugger("World.h");
 
     res = r;
 
+    world_height = height;
+    world_width = width;
+
     state.resize((size_t)(world_height * world_width));
 
-    auto rect_p = r->retrieve_resource("RECT_GAMECPP");
+    auto rect_p = r->retrieve_resource("RECT_WORLD_CPP");
     if (!rect_p) debug::err(write, "Rect could not be created!");
-    our_rect = std::get<sf::RectangleShape>(*(r->retrieve_resource("RECT_GAMECPP")));
+    our_rect = std::get<sf::RectangleShape>(*(r->retrieve_resource("RECT_WORLD_CPP")));
     our_rect.setFillColor(sf::Color::Red);
     our_rect.setSize({(float)square_size, (float)square_size});
 
@@ -165,22 +170,13 @@ void World::load() {
     state[1] = 1;
     state[coord(0, 1)] = 1;
     state[coord(1, 1)] = 1;
+}
 
-//    state[coord(4, 10)] = 1;
-//    state[coord(4, 11)] = 1;
-//    state[coord(4, 13)] = 1;
-//    state[coord(4, 14)] = 1;
-//
-//    state[coord(5, 10)] = 1;
-//    state[coord(5, 14)] = 1;
-//
-//    state[coord(6, 11)] = 1;
-//    state[coord(6, 12)] = 1;
-//    state[coord(6, 13)] = 1;
-//
-//    state[coord(7, 12)] = 1;
+void World::invert(int x, int y) {
+    //Invert the tile pointed to by the two parameters
+    x = x / square_size;
+    y = y / square_size;
 
-//    state[coord(5, 5)] = 1;
-//    state[coord(5, 6)] = 1;
-//    state[coord(5, 7)] = 1;
+    if (coord(x, y) > state.size()) return;
+    state[coord(x, y)] ^= 1;
 }

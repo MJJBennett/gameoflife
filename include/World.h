@@ -33,8 +33,10 @@ private:
 class World {
     friend WorldIter;
 public:
-    void init(ResourceManager * r);
+    void init(ResourceManager * r, int width = 100, int height = 100);
     void set_square_size(float s);
+
+    void invert(int, int);
 
     int get_square_size();
 
