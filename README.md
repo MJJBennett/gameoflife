@@ -18,6 +18,10 @@ In order to build the application, `git clone` or download this repository, as w
 
 ##### Instructions
 
-Currently, the starting setup of the simulation can only be configured by directly setting it in World.cpp (under the function `load()`). This will be changed to allow for live changes as well as configuration files.
+Set tiles to "alive" by clicking on them.
 
-The simulation can be advanced by pressing `a` or the return key, and reset with `r`. Furthermore, the simulation can be advanced any `n` times by entering a number (say, `342`) with number keys and then pressing `a` or the return key.
+The simulation can be advanced by pressing the return key, and reset with `r`. Furthermore, the simulation can be advanced any `n` times by entering a number (say, `342`) with number keys and then pressing the return key.
+
+The tile size can be adjusted incrementally by pressing `o` and `p`.
+
+A variety of configuration options can be found and adjusted in `conway.config`.
