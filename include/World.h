@@ -36,15 +36,13 @@ public:
     void init(ResourceManager * r, unsigned int width = 100, unsigned int height = 100);
     void set_square_size(float s);
 
-    void invert(int, int);
+    bool invert(int, int);
 
     int get_square_size();
 
     bool update();
 
     void dump_debug();
-
-    void draw_all();
 
     void draw_canvas(sf::RenderWindow & window);
     void redraw_needed() { _redraw_needed = true; }
@@ -58,7 +56,6 @@ public:
 
 private:
     bool side(int x, int y, int s);
-    void resolve_square(int x, int y); //TODO
     logger write;
     unsigned int coord(int x, int y) const;
     unsigned int world_width = 100;

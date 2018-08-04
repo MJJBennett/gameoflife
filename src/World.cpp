@@ -11,7 +11,7 @@ const sf::RectangleShape& WorldIter::operator*() {
 unsigned int World::coord(int x, int y) const {
     if (x > world_width || x < 0 || y > world_height || y < 0) {
         debug::err(write, "X and Y entered out of bounds!");
-        return 0;
+        return (unsigned int)(state.size() + 1);
     }
     unsigned int _coord = (world_width * y) + x;
     return _coord;
@@ -48,9 +48,6 @@ const sf::RectangleShape& World::get_rect(int x, int y) const {
 
 int World::get_square_size() {
     return square_size;
-}
-
-void World::resolve_square(int x, int y) {
 }
 
 const sf::RectangleShape& World::get_rect(int pos) const {
@@ -161,11 +158,6 @@ void World::draw_canvas(sf::RenderWindow &window) {
     _redraw_needed = false;
 }
 
-void World::draw_all() {
-//    updated_tiles.clear();
-//    for (unsigned int i = 0; i < state.size(); i++) updated_tiles.push_back(i);
-}
-
 void World::dump_debug() {
     write("Dumping world debug.");
     write("World state:");
@@ -195,11 +187,12 @@ void World::load() {
     state[coord(1, 1)] = 1;
 }
 
-void World::invert(int x, int y) {
+bool World::invert(int x, int y) {
     //Invert the tile pointed to by the two parameters
     x = x / square_size;
     y = y / square_size;
 
-    if (coord(x, y) > state.size()) return;
+    if (coord(x, y) > state.size()) return false;
     state[coord(x, y)] ^= 1;
+    return true;
 }
