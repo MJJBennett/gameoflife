@@ -1,4 +1,5 @@
 #include <chrono>
+#include <iostream>
 #include "game.h"
 
 void game::init() {
@@ -56,10 +57,21 @@ void game::run() {
 
     //Main loop
     write("Entering main loop.");
-    int _tick = 0;
+    unsigned int _tick = 0;
+    unsigned int _draws = 0;
     long long do_update = 0;
     int fps = 0;
+    bool redraw_needed = false;
+    struct draw_causes {
+        unsigned int resize = 0;
+        unsigned int mouse_down = 0;
+        unsigned int input_displayed = 0;
+        unsigned int fps_displayed = 0;
+        unsigned int ticks_displayed = 0;
+    };
+    draw_causes _draw_causes;
     while (w.isOpen()) {
+        redraw_needed = false;
         //Basic event loop
         sf::Event e{};
         while (w.pollEvent(e)) {
@@ -93,6 +105,13 @@ void game::run() {
                              now = std::chrono::system_clock::now();
                              fps = (int) (1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / fps_update_rate));
                              write("\tCurrent FPS: " + std::to_string(1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / (_tick % fps_update_rate + 1))));
+                             write("\tRedraws have occurred " + std::to_string(100.f*(_draws/(float)_tick)) + "% of frames.");
+                             write("\tRedraw causes:\n\t\tResize: " + std::to_string(100.f*(_draw_causes.resize/(float)_draws)) +
+                             "%\n\t\tMouse down: " + std::to_string(100.f*(_draw_causes.mouse_down/(float)_draws)) +
+                             "%\n\t\tFPS displayed: " + std::to_string(100.f*(_draw_causes.fps_displayed/(float)_draws)) +
+                             "%\n\t\tTicks displayed: " + std::to_string(100.f*(_draw_causes.ticks_displayed/(float)_draws)) +
+                             "%\n\t\tInput displayed: " + std::to_string(100.f*(_draw_causes.input_displayed/(float)_draws)) + "%");
+                             //std::cout << "DRAWS " << _draws/(float)_tick << std::endl;
                              //world.dump_debug();
                              continue;
                          case sf::Keyboard::Key::Down:
@@ -111,10 +130,14 @@ void game::run() {
                         && e.mouseButton.y > 0 && e.mouseButton.y < w.getSize().y) {
                         //If the mouse button was released while in the window
                         world.invert(e.mouseButton.x, e.mouseButton.y);
+                        redraw_needed = true;
+                        _draw_causes.mouse_down++;
                     }
                     continue;
                 case sf::Event::Resized:
                     w.setView(sf::View(sf::FloatRect(0, 0, e.size.width, e.size.height)));
+                    redraw_needed = true;
+                    _draw_causes.resize++;
                     continue;
                 case sf::Event::Closed:
                     w.close();
@@ -125,42 +148,56 @@ void game::run() {
         }
 
         //Do logical updates here
+
+        //If we're doing updates
         if (do_update > 0) {
             world.update();
             do_update--;
         }
 
-        //Clears the window for drawing
-        w.clear(sf::Color::Blue);
-
-        for (auto && sqr : world) {
-            if (sqr.getPosition().x < w.getSize().x && sqr.getPosition().y < w.getSize().y)
-                w.draw(sqr);
-        }
-
+        //If there's text being entered
         if (key_combo.active) {
-            if (_tick % text_update_rate == 0) {
+            if (_tick % text_update_rate == 0 && (key_state.getPosition() != sf::Vector2f(5, w.getSize().y - 24) || key_state.getString() != key_combo.str_state)) {
                 key_state.setString(key_combo.str_state);
                 key_state.setPosition(5, w.getSize().y - 24);
+                redraw_needed = true;
+                _draw_causes.input_displayed++;
             }
-            w.draw(key_state);
         }
         if (do_update > 0 && show_numbers) {
-            if (_tick % text_update_rate == 0) {
+            if (_tick % text_update_rate == 0 && (update_state.getPosition() != sf::Vector2f(w.getSize().x - update_state.getLocalBounds().width - 5, w.getSize().y - 24) || update_state.getString() != std::to_string(do_update))) {
                 update_state.setString(std::to_string(do_update));
                 update_state.setPosition(w.getSize().x - update_state.getLocalBounds().width - 5, w.getSize().y - 24);
+                redraw_needed = true;
+                _draw_causes.ticks_displayed++;
             }
-            w.draw(update_state);
         }
         if (show_fps) {
             if (_tick % fps_update_rate == 0) {
                 //calculate frames per second
                 now = std::chrono::system_clock::now();
+                int fps_c = fps;
                 fps = (int) (1 / ((std::chrono::duration_cast<second>(now - previous_frame)).count() / fps_update_rate));
                 fps_state.setString(std::to_string(fps));
                 fps_state.setPosition(w.getSize().x - fps_state.getLocalBounds().width - 5, 5);
                 previous_frame = now;
+                if (fps!=fps_c) {
+                    redraw_needed = true;
+                    _draw_causes.fps_displayed++;
+                }
             }
+        }
+
+        //Drawing only below here - nothing logical
+        if (redraw_needed) {
+            w.clear(sf::Color::Blue);
+            world.redraw_needed();
+        }
+        world.draw_canvas(w);
+        if (redraw_needed) {
+            _draws++;
+            w.draw(key_state);
+            w.draw(update_state);
             w.draw(fps_state);
         }
         w.display();

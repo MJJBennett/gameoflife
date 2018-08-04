@@ -5,19 +5,19 @@
 
 
 const sf::RectangleShape& WorldIter::operator*() {
-    return _world->get_rect(_pos);
+    return _world->get_rect(_world->updated_tiles[_pos]);
 }
 
-int World::coord(int x, int y) const {
+unsigned int World::coord(int x, int y) const {
     if (x > world_width || x < 0 || y > world_height || y < 0) {
         debug::err(write, "X and Y entered out of bounds!");
-        return -1;
+        return 0;
     }
-    int _coord = (world_width * y) + x;
+    unsigned int _coord = (world_width * y) + x;
     return _coord;
 }
 
-void World::init(ResourceManager * r, int width, int height) {
+void World::init(ResourceManager * r, unsigned int width, unsigned int height) {
     write = debug::get_debugger("World.h");
 
     res = r;
@@ -102,6 +102,7 @@ bool World::side(int x, int y, int s) {
 }
 
 bool World::update() {
+    updated_tiles.clear();
     for (int x = 0; x < world_width; x++) {
         for (int y = 0; y < world_height; y++) {
             int count = 0;
@@ -115,6 +116,7 @@ bool World::update() {
                 //std::cout << "Dead cell @ " << x << ',' << y << '\n';
                 if (count == 3) {
                     //Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+                    updated_tiles.push_back(coord(x, y));
                     state[coord(x,y)] = 2;
                 }
                 continue;
@@ -124,16 +126,18 @@ bool World::update() {
                 //Any live cell with fewer than two live neighbors dies, as if by under population.
                 case 0:
                 case 1:
-                    state[coord(x, y)] = static_cast<unsigned char>(state[coord(x, y)] & 1);
+                    updated_tiles.push_back(coord(x, y));
+                    state[coord(x, y)] = static_cast<unsigned char>(state[coord(x, y)] & 1UL);
                     break;
                 //Any live cell with two or three live neighbors lives on to the next generation.
                 case 2:
                 case 3:
-                    state[coord(x, y)] = static_cast<unsigned char>(state[coord(x, y)] | (1 << 1));
+                    state[coord(x, y)] = static_cast<unsigned char>(state[coord(x, y)] | (1UL << 1UL));
                     break;
                 //Any live cell with more than three live neighbors dies, as if by overpopulation.
                 case 4:
-                    state[coord(x, y)] = static_cast<unsigned char>(state[coord(x, y)] & 1);
+                    updated_tiles.push_back(coord(x, y));
+                    state[coord(x, y)] = static_cast<unsigned char>(state[coord(x, y)] & 1UL);
                     break;
                 default:
                     write("[ERROR] Count of " + std::to_string(count) + " was registered!");
@@ -141,6 +145,25 @@ bool World::update() {
         }
     }
     for (unsigned char &i : state) i = i >> 1;
+}
+
+void World::draw_canvas(sf::RenderWindow &window) {
+    if (_redraw_needed) {
+        for (unsigned int i = 0; i < state.size(); i++) {
+            window.draw(get_rect(i));
+        }
+    }
+    else {
+        for (unsigned int & i : updated_tiles) {
+            window.draw(get_rect(i));
+        }
+    }
+    _redraw_needed = false;
+}
+
+void World::draw_all() {
+//    updated_tiles.clear();
+//    for (unsigned int i = 0; i < state.size(); i++) updated_tiles.push_back(i);
 }
 
 void World::dump_debug() {

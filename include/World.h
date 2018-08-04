@@ -33,7 +33,7 @@ private:
 class World {
     friend WorldIter;
 public:
-    void init(ResourceManager * r, int width = 100, int height = 100);
+    void init(ResourceManager * r, unsigned int width = 100, unsigned int height = 100);
     void set_square_size(float s);
 
     void invert(int, int);
@@ -44,11 +44,15 @@ public:
 
     void dump_debug();
 
+    void draw_all();
+
+    void draw_canvas(sf::RenderWindow & window);
+    void redraw_needed() { _redraw_needed = true; }
     //We're going to make this iterable
     //Note: This would (normally) be an incredibly bad idea
     //However, as this is mostly just a pet project for fun, we're doing this anyways
     WorldIter begin() { return WorldIter(this, 0); }
-    WorldIter end() { return WorldIter(this, (int)state.size()); }
+    WorldIter end() { return WorldIter(this, (int)updated_tiles.size()); }
 
     void reset();
 
@@ -56,10 +60,11 @@ private:
     bool side(int x, int y, int s);
     void resolve_square(int x, int y); //TODO
     logger write;
-    int coord(int x, int y) const;
-    int world_width = 100;
-    int world_height = 100;
+    unsigned int coord(int x, int y) const;
+    unsigned int world_width = 100;
+    unsigned int world_height = 100;
     std::vector<unsigned char> state;
+    std::vector<unsigned int> updated_tiles = {};
     int square_size = 5;
     const sf::RectangleShape& get_rect(int, int) const;
     const sf::RectangleShape& get_rect(int) const;
@@ -67,6 +72,7 @@ private:
     ResourceManager * res = nullptr;
     sf::Color bg_color = sf::Color::Black;
 
+    bool _redraw_needed =  false;
     void load();
 };
 
